@@ -12,8 +12,9 @@ Chef-GPT is an Azure Function-powered application that uses AI to generate healt
 ## Prerequisites
 
 1. **Azure Account**: An active Azure subscription is required.
-2. **Azure Developer CLI (azd)**: Ensure [azd is installed](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd).
-3. **Azure AI Studio Models**:
+1. **Azure Command-Line CLI (az)**: Ensure [az is installed](https://learn.microsoft.com/en-us/cli/azure/).
+1. **Azure Developer CLI (azd)**: Ensure [azd is installed](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd).
+1. **Azure AI Studio Models**:
     - GPT-4o mini for text-based recipe generation.
     - DALL-E 3 for image-based meal visualization.
     - Ensure both models are created and configured in Azure AI Studio.
@@ -39,14 +40,16 @@ azd auth login  # Optional: --use-device-code
 
 2. Configure the environment variables
 
-    | Variable            | Purpose                                                                 |
-    |---------------------|-------------------------------------------------------------------------|
-    | AZURE_LOCATION      | The Azure Region                                                        |
-    | GPT_ENDPOINT        | The endpoint for the GPT model used for recipe generation               |
-    | DALLE_ENDPOINT      | The endpoint for the DALL-E model used for image generation             |
-    | AZURE_AI_API_KEY    | The Azure AI API key                                                    |
+    | Variable              | Purpose                                                                 |
+    |-----------------------|-------------------------------------------------------------------------|
+    | AZURE_SUBSCRIPTION_ID | The Azure Subscription to deploy to                                     |
+    | AZURE_LOCATION        | The Azure Region                                                        |
+    | GPT_ENDPOINT          | The endpoint for the GPT model used for recipe generation               |
+    | DALLE_ENDPOINT        | The endpoint for the DALL-E model used for image generation             |
+    | AZURE_AI_API_KEY      | The Azure AI API key                                                    |
 
     ```bash
+    azd env set AZURE_SUBSCRIPTION_ID <Azure subscription id>
     azd env set AZURE_LOCATION <Azure Region>
     azd env set GPT_ENDPOINT <GPT Endpoint>
     azd env set DALLE_ENDPOINT <DALL-E Endpoint>

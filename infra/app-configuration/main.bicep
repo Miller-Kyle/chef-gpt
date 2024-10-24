@@ -176,9 +176,9 @@ module configurationStore_keyValues '.bicep/key_values.bicep' = [for (keyValue, 
     appConfigurationName: configStore.name
     name: keyValue.name
     value: keyValue.value
-    label: contains(keyValue, 'label') ? keyValue.label : ''
-    contentType: contains(keyValue, 'contentType') ? keyValue.contentType : ''
-    tags: contains(keyValue, 'tags') ? keyValue.tags : {}
+    label:  keyValue.?label ?? ''
+    contentType: keyValue.?contentType ?? ''
+    tags: keyValue.?tags ?? {}
   }
 }]
 
@@ -189,7 +189,7 @@ module configurationStore_featureFlags '.bicep/feature_flags.bicep' = [for (feat
     name: featureFlag.name
     featureDescription: featureFlag.description
     enabled: featureFlag.enabled
-    label: contains(featureFlag, 'label') ? featureFlag.label : ''
+    label: featureFlag.?label ?? ''
   }
 }]
 
@@ -220,10 +220,10 @@ resource configstore_diagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-
 module configStore_rbac '.bicep/nested_rbac.bicep' = [for (roleAssignment, index) in roleAssignments: {
   name: '${deployment().name}-rbac-${index}'
   params: {
-    description: contains(roleAssignment, 'description') ? roleAssignment.description : ''
+    description: roleAssignment.?description ?? ''
     principalIds: roleAssignment.principalIds
     roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
-    principalType: contains(roleAssignment, 'principalType') ? roleAssignment.principalType : ''
+    principalType: roleAssignment.?principalType ?? ''
     resourceId: configStore.id
   }
 }]
@@ -282,9 +282,6 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-01-01' = if (e
       id: privateLinkSettings.subnetId
     }
   }
-  dependsOn: [
-    configStore
-  ]
 }
 
 resource privateDNSZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-01-01' = if (enablePrivateLink) {
@@ -300,9 +297,6 @@ resource privateDNSZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneG
       }
     ]
   }
-  dependsOn: [
-    privateDNSZone
-  ]
 }
 
 #disable-next-line BCP081
@@ -316,7 +310,4 @@ resource virtualNetworkLink 'Microsoft.Network/privateDnsZones/virtualNetworkLin
       id: privateLinkSettings.vnetId
     }
   }
-  dependsOn: [
-    privateDNSZone
-  ]
 }
