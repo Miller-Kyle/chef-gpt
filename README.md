@@ -41,6 +41,7 @@ azd auth login  # Optional: --use-device-code
 
     | Variable            | Purpose                                                                 |
     |---------------------|-------------------------------------------------------------------------|
+    | AZURE_LOCATION      | The Azure Region                                                        |
     | GPT_ENDPOINT        | The endpoint for the GPT model used for recipe generation               |
     | DALLE_ENDPOINT      | The endpoint for the DALL-E model used for image generation             |
     | AZURE_TENANT_ID     | The Azure Tenant ID associated with your Azure subscription             |
@@ -48,6 +49,7 @@ azd auth login  # Optional: --use-device-code
     | AZURE_CLIENT_SECRET | The Client Secret of the Azure AD application                           |
 
     ```bash
+    azd env set AZURE_LOCATION <Azure Region>
     azd env set GPT_ENDPOINT <GPT Endpoint>
     azd env set DALLE_ENDPOINT <DALL-E Endpoint>
     azd env set AZURE_TENANT_ID <Azure Tenant ID>
@@ -78,7 +80,7 @@ Once deployed, the application can be accessed via an HTTP endpoint provided by 
 
 ## Model Instructions and Safety Parameters
 
-The model's instructions are stored in [gpt-instructions-safety](./model-instruction/gpt-instructions-safety.md). A Powershell script is provided to easily turn the markdown into a string that can be passed as the model's system message. The safety parameters are adapted from the sample safety instructions in Azure AI Studio, they are not complete and should not be assumed correct.
+The model's instructions are stored in [gpt-instructions-safety](./model-instruction/gpt-instructions-safety.md). A Powershell script is provided to easily turn the markdown into a string that can be passed as the model's system message. The safety parameters are adapted from the sample safety instructions in Azure AI Studio, they are not complete and should not be assumed to be correct.
 
 ## Sequence 
 

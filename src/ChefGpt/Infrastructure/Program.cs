@@ -71,7 +71,7 @@ namespace ChefGpt.Infrastructure
 
             services.AddHttpClient<IGptService, GptService>(client =>
             {
-                client.BaseAddress = aiStudioConfiguration.Endpoint;
+                client.BaseAddress = aiStudioConfiguration.GptEndpoint;
             })
             .AddHttpMessageHandler(_ => GetServicePrincipleAuthenticationHandler(aiStudioConfiguration));
         }

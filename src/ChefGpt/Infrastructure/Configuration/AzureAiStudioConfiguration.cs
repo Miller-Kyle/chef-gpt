@@ -8,9 +8,9 @@
 
         public string ClientSecret { get; set; }
 
-        public Uri Endpoint { get; set; }
+        public Uri GptEndpoint { get; set; }
 
-        public string TenantId { get; set; }
+        public Uri DallEEndpoint { get; set; }
 
         public string Scope { get; set; }
     }

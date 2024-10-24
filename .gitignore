@@ -422,3 +422,4 @@ reporting/*/_reports/
 
 **/launchSettings.json
 .mono/
+.azure
