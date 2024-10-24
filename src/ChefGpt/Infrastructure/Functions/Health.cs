@@ -7,18 +7,18 @@ namespace ChefGpt.Infrastructure.Functions
 {
     public class Health
     {
-        private readonly ILogger<Health> _logger;
+        private readonly ILogger<Health> logger;
 
         public Health(ILogger<Health> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
-        [Function("Function1")]
-        public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+        [Function("Health")]
+        public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
-            return new OkObjectResult("Welcome to Azure Functions!");
+            this.logger.LogInformation("Health Funciton: Http Triggered");
+            return new OkObjectResult("OK");
         }
     }
 }

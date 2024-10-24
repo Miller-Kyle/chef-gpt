@@ -71,7 +71,25 @@ When run locally, the Azure Function runs as the Visual Studio user. Ensure the 
 | App Config     | App Configuration Data Reader | Note: This role can take up to 15 min to take effect. |
 | Key Vault      | Key Vault Secrets User        |                                                       |
 
-###
+### Local Settings File
+Create a `local.settings.json` file in [Infrastructure](./src/ChefGpt/Infrastructure/) with the following content
+
+```
+{
+    "IsEncrypted": false,
+    "Values": {
+        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated"
+    }
+}
+```
+
+Because the local.settings.json may contain secrets, such as connection strings, you should never store it in a remote repository. Read more at [Code and test Azure Functions locally](https://learn.microsoft.com/en-us/azure/azure-functions/functions-develop-local#local-settings-file)
+
+### Set Environment Variable(s)
+The following environment variables must be set to run the function locally. They can be obtained from azd's .env file, or from the resource in Azure.
+
+- APP_CONFIGURATION_ENDPOINT
 
 ### Usage
 

@@ -10,7 +10,6 @@ using ChefGpt.Application.RecipePrompting.Commands;
 using ChefGpt.Application.RecipePrompting;
 using ChefGpt.Infrastructure.RecipePrompting;
 using ChefGpt.Infrastructure.Authentication.Handlers;
-using ChefGpt.Infrastructure.Authentication.TokenProviders;
 
 namespace ChefGpt.Infrastructure
 {
