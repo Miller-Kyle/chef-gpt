@@ -90,9 +90,9 @@ sequenceDiagram
     participant GptService
     participant DalleService
     
-    User->>RecipeFunction: POST - Recipe prompt
-    RecipeFunction->>GptService: POST - System context and recipe prompt
-    GptService->>RecipeFunction: Response: Recipe chat
+    User->>RecipeFunction: POST: Recipe prompt
+    RecipeFunction->>GptService: POST: System context and recipe prompt
+    GptService->>RecipeFunction: Recipe chat
     RecipeFunction->>DalleService: POST: Generate image
     DalleService->>GptService: Image
     RecipeFunction->>User: Recipe and image
@@ -105,3 +105,4 @@ Contributions are welcome! Please submit a pull request or open an issue to sugg
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
+
