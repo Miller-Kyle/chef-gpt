@@ -56,11 +56,26 @@ azd auth login  # Optional: --use-device-code
     azd env set AZURE_AI_API_KEY <API Key>
     ```
 
-### Deploy the Infrastructure and Function
+### Deploy the Infrastructure
 
 ```bash
-azd up
+azd provision
 ```
+
+### Configure RBAC
+
+When run locally, the Azure Function runs as the Visual Studio user. Ensure the user has the following roles on the listed resources:
+
+| Resource       | Role                          | Notes                                                 |
+|----------------|-------------------------------|-------------------------------------------------------|
+| App Config     | App Configuration Data Reader | Note: This role can take up to 15 min to take effect. |
+| Key Vault      | Key Vault Secrets User        |                                                       |
+
+###
+
+### Usage
+
+Start the Infrasturcture project from Visual Studio. Once running, the application can be accessed via an HTTP endpoint provided by the Azure Function. Send a POST request with the desired recipe parameters (e.g., dietary preferences, time constraints) to generate a recipe and receive an AI-generated image of the meal.
 
 ## Additional azd commands
 
@@ -73,13 +88,9 @@ The workspace is brought online using the Azure Developer CLI. Additionally, Vis
 | Deploy infra only  | `azd provision`            |
 | Deploy function    | `azd deploy`               |
 
-## Usage
-
-Once deployed, the application can be accessed via an HTTP endpoint provided by the Azure Function. Send a POST request with the desired recipe parameters (e.g., dietary preferences, time constraints) to generate a recipe and receive an AI-generated image of the meal.
-
 ## Model Instructions and Safety Parameters
 
-The model's instructions are stored in [gpt-instructions-safety](./model-instruction/gpt-instructions-safety.md). A Powershell script is provided to easily turn the markdown into a string that can be passed as the model's system message. The safety parameters are adapted from the sample safety instructions in Azure AI Studio, they are not complete and should not be assumed to be correct.
+The model's instructions are stored in [gpt-instructions-safety](./model-instruction/gpt-instructions-safety.md). A Powershell script is provided to easily turn the markdown into a string that can be passed as the model's system message. The safety parameters are adapted from the sample safety instructions in Azure AI Studio, they are not complete and should not be assumed to be correct. The system message is stored in [configuration.bicep](./infra/configuration.bicep).
 
 ## Sequence 
 
