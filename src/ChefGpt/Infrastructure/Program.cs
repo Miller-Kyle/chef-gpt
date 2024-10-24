@@ -73,7 +73,7 @@ namespace ChefGpt.Infrastructure
             {
                 client.BaseAddress = aiStudioConfiguration.GptEndpoint;
             })
-            .AddHttpMessageHandler(_ => GetServicePrincipleAuthenticationHandler(aiStudioConfiguration));
+            .AddHttpMessageHandler(_ => GetApiKeyAuthenticationHandler(aiStudioConfiguration));
         }
 
         private static DefaultAzureCredential GetManagedIdentity()
@@ -84,13 +84,9 @@ namespace ChefGpt.Infrastructure
             });
         }
 
-        private static DelegatingHandler GetServicePrincipleAuthenticationHandler(AzureAiStudioConfiguration configuration)
+        private static DelegatingHandler GetApiKeyAuthenticationHandler(AzureAiStudioConfiguration configuration)
         {
-            return new AuthenticationHandler(new ServicePrincipalTokenProvider(configuration.ClientId, configuration.ClientSecret)
-            {
-                AuthorityUri = configuration.AuthorityUri,
-                Scope = configuration.Scope,
-            });
+            return new ApiKeyAuthenticationHandler(configuration.ApiKey);
         }
     }
 }

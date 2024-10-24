@@ -44,17 +44,13 @@ azd auth login  # Optional: --use-device-code
     | AZURE_LOCATION      | The Azure Region                                                        |
     | GPT_ENDPOINT        | The endpoint for the GPT model used for recipe generation               |
     | DALLE_ENDPOINT      | The endpoint for the DALL-E model used for image generation             |
-    | AZURE_TENANT_ID     | The Azure Tenant ID associated with your Azure subscription             |
-    | AZURE_CLIENT_ID     | The Client ID of the Azure AD application with access to Azure AI Studio|
-    | AZURE_CLIENT_SECRET | The Client Secret of the Azure AD application                           |
+    | AZURE_AI_API_KEY    | The Azure AI API key                                                    |
 
     ```bash
     azd env set AZURE_LOCATION <Azure Region>
     azd env set GPT_ENDPOINT <GPT Endpoint>
     azd env set DALLE_ENDPOINT <DALL-E Endpoint>
-    azd env set AZURE_TENANT_ID <Azure Tenant ID>
-    azd env set AZURE_CLIENT_ID <Azure Client ID>
-    azd env set AZURE_CLIENT_SECRET <Azure AD Secret>
+    azd env set AZURE_AI_API_KEY <API Key>
     ```
 
 ### Deploy the Infrastructure and Function

@@ -8,14 +8,8 @@
     "location": {
       "value": "${AZURE_LOCATION}"
     },
-    "applicationTenantId": {
-      "value": "${AZURE_TENANT_ID}"
-    },
-    "applicationClientId": {
-      "value": "${AZURE_CLIENT_ID}"
-    },
-    "applicationClientSecret": {
-      "value": "${AZURE_CLIENT_SECRET}"
+    "azureAiApiKey": {
+      "value": "${AZURE_AI_API_KEY}"
     },
     "gptEndpoint": {
       "value": "${GPT_ENDPOINT}"

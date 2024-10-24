@@ -1,21 +1,19 @@
-﻿using Microsoft.Rest;
-
-namespace ChefGpt.Infrastructure.Authentication.Handlers
+﻿namespace ChefGpt.Infrastructure.Authentication.Handlers
 {
-    public class AuthenticationHandler : DelegatingHandler
+    public class ApiKeyAuthenticationHandler : DelegatingHandler
     {
         /// <summary>
-        ///     The token provider that's used to generate the token
+        ///     The api key
         /// </summary>
-        private readonly ITokenProvider tokenProvider;
+        private readonly string key;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AuthenticationHandler" /> class.
+        ///     Initializes a new instance of the <see cref="ApiKeyAuthenticationHandler" /> class.
         /// </summary>
         /// <param name="tokenProvider">Token provider.</param>
-        public AuthenticationHandler(ITokenProvider tokenProvider)
+        public ApiKeyAuthenticationHandler(string key)
         {
-            this.tokenProvider = tokenProvider;
+            this.key = key;
         }
 
         /// <summary>
@@ -27,8 +25,7 @@ namespace ChefGpt.Infrastructure.Authentication.Handlers
         /// <returns>A task that represents the asynchronous operation, containing the HTTP response.</returns>
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var authenticationHeader = await this.tokenProvider.GetAuthenticationHeaderAsync(cancellationToken);
-            request.Headers.Authorization = authenticationHeader;
+            request.Headers.Add("api-key", this.key);
             return await base.SendAsync(request, cancellationToken);
         }
     }

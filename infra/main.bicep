@@ -14,15 +14,9 @@ param location string
 @description('Used to name all resources')
 param resourceName string = 'chefgpt'
 
-@description('Specify the AD Tenant Id.')
-param applicationTenantId string
-
-@description('Specify the AD Application Client Id.')
-param applicationClientId string
-
-@description('Specify the AD Application Client Secret.')
+@description('Specify the Azure AI API Key.')
 @secure()
-param applicationClientSecret string
+param azureAiApiKey string
 
 @description('Specify the GPT Azure Studio Endpoint.')
 param gptEndpoint string
@@ -197,11 +191,8 @@ module appConfiguration 'configuration.bicep' = {
     uniqueValue: uniqueValue
 
     identityName: managedidentity.outputs.name
-    insightsName: insights.outputs.name
-
-    applicationClientId: applicationClientId
-    applicationClientSecret: applicationClientSecret
-    tenantId: applicationTenantId
+    
+    azureAiApiKey: azureAiApiKey
     gptEndpoint: gptEndpoint
     dallEEndpoint: dallEEndpoint
   }

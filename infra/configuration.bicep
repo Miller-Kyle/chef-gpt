@@ -3,15 +3,12 @@ param uniqueValue string
 param location string
 param configname string
 param tags object
-param insightsName string
 param identityName string
-param tenantId string
-param applicationClientId string
 param gptEndpoint string
 param dallEEndpoint string
 
 @secure()
-param applicationClientSecret string
+param azureAiApiKey string
 
 resource identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
   name: identityName
@@ -43,8 +40,8 @@ module keyvault 'br/public:avm/res/key-vault/vault:0.3.4' = {
     secrets: {
       secureList: [ 
         {
-          name: 'client-secret'
-          value: applicationClientSecret
+          name: 'azure-ai-api-key'
+          value: azureAiApiKey
         }
       ]
     }
@@ -61,18 +58,6 @@ var settings = [
     label: label
   }
   {
-    name: 'ChefGpt:AzureAiStudioConfiguration:AuthorityUri'
-    value: 'https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token'
-    contentType: 'text/plain'
-    label: label
-  }
-  {
-    name: 'ChefGpt:AzureAiStudioConfiguration:ClientId'
-    value: applicationClientId
-    contentType: 'text/plain'
-    label: label
-  }
-  {
     name: 'ChefGpt:AzureAiStudioConfiguration:GptEndpoint'
     value: gptEndpoint
     contentType: 'text/plain'
@@ -80,13 +65,7 @@ var settings = [
   }
   {
     name: 'ChefGpt:AzureAiStudioConfiguration:DallEEndpoint'
-    value: gptEndpoint
-    contentType: 'text/plain'
-    label: label
-  }
-  {
-    name: 'ChefGpt:AzureAiStudioConfiguration:Scope'
-    value: '${applicationClientId}/.default'
+    value: dallEEndpoint
     contentType: 'text/plain'
     label: label
   }
@@ -98,8 +77,8 @@ var settings = [
   }
   // Key Vault Secret Reference
   {
-    name: 'ChefGpt:AzureAiStudioConfiguration:ClientSecret'
-    value: string({uri: '${keyvault.outputs.uri}secrets/client-secret'})
+    name: 'ChefGpt:AzureAiStudioConfiguration:ApiKey'
+    value: string({uri: '${keyvault.outputs.uri}secrets/azure-ai-api-key'})
     contentType: 'application/vnd.microsoft.appconfig.keyvaultref+json;charset=utf-8'
     label: label
   }
