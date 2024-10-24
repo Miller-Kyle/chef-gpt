@@ -80,6 +80,24 @@ The workspace is brought online using the Azure Developer CLI. Additionally, Vis
 
 Once deployed, the application can be accessed via an HTTP endpoint provided by the Azure Function. Send a POST request with the desired recipe parameters (e.g., dietary preferences, time constraints) to generate a recipe and receive an AI-generated image of the meal.
 
+## Sequence 
+
+::: mermaid
+sequenceDiagram
+    autonumber
+    actor User
+    participant RecipeFunction
+    participant GptService
+    participant DalleService
+    
+    User->>RecipeFunction: POST - Recipe prompt
+    RecipeFunction->>GptService: POST - System context and recipe prompt
+    GptService->>RecipeFunction: Response: Recipe chat
+    RecipeFunction->>DalleService: POST: Generate image
+    DalleService->>GptService: Image
+    RecipeFunction->>User: Recipe and image
+:::
+
 ## Contributing
 
 Contributions are welcome! Please submit a pull request or open an issue to suggest improvements.
