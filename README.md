@@ -82,7 +82,7 @@ Once deployed, the application can be accessed via an HTTP endpoint provided by 
 
 ## Sequence 
 
-::: mermaid
+``` mermaid
 sequenceDiagram
     autonumber
     actor User
@@ -96,7 +96,7 @@ sequenceDiagram
     RecipeFunction->>DalleService: POST: Generate image
     DalleService->>GptService: Image
     RecipeFunction->>User: Recipe and image
-:::
+```
 
 ## Contributing
 
