@@ -3,8 +3,14 @@
 
 namespace ChefGpt.Application.Configuration
 {
+    /// <summary>
+    /// Configuration settings for GPT.
+    /// </summary>
     public class GptConfiguration
     {
+        /// <summary>
+        /// Gets or sets the system prompt for GPT.
+        /// </summary>
         public string SystemPrompt { get; set; }
     }
 }

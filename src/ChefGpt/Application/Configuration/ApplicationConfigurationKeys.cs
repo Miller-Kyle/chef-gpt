@@ -3,8 +3,14 @@
 
 namespace ChefGpt.Application.Configuration
 {
+    /// <summary>
+    /// Contains keys for application configuration settings.
+    /// </summary>
     public class ApplicationConfigurationKeys
     {
+        /// <summary>
+        /// Key for the GPT configuration settings.
+        /// </summary>
         public const string GptConfiguration = "ChefGpt:GptConfiguration";
     }
 }

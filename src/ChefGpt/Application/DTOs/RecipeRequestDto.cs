@@ -3,10 +3,19 @@
 
 namespace ChefGpt.Application.DTOs
 {
+    /// <summary>
+    /// Data transfer object for recipe requests.
+    /// </summary>
     public class RecipeRequestDto
     {
+        /// <summary>
+        /// Gets or sets the prompt for the recipe request.
+        /// </summary>
         public string Prompt { get; set; }
 
+        /// <summary>
+        /// Gets or sets the session ID for the recipe request.
+        /// </summary>
         public string SessionId { get; set; }
     }
 }
