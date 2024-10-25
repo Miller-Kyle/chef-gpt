@@ -10,6 +10,7 @@ using ChefGpt.Application.RecipePrompting.Commands;
 using ChefGpt.Application.RecipePrompting;
 using ChefGpt.Infrastructure.RecipePrompting;
 using ChefGpt.Infrastructure.Authentication.Handlers;
+using ChefGpt.Infrastructure.SessionStorage;
 
 namespace ChefGpt.Infrastructure
 {
@@ -67,7 +68,7 @@ namespace ChefGpt.Infrastructure
             services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(GetRecipeQuery).Assembly));
 
             services.AddSingleton(configurationRefresher);
-            services.AddSingleton<ISessionStorage, SessionStorage>();
+            services.AddSingleton<ISessionStorage, InMemorySessionStorage>();
             services.AddSingleton<IGptService, GptService>();
             services.AddHttpClient<IGptService, GptService>()
                     .AddHttpMessageHandler(_ => GetApiKeyAuthenticationHandler(aiStudioConfiguration));

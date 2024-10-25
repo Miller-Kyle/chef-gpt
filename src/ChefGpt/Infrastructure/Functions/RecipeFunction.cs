@@ -27,7 +27,7 @@ namespace ChefGpt.Infrastructure.Functions
         [Function("Prompt")]
         public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData request)
         {
-            logger.LogInformation("Recipe Prompt Function triggered");
+            this.logger.LogInformation("Recipe Prompt Function triggered");
 
             var requestBody = await request.ReadAsStringAsync();
             var recipeRequest = ParseRequestBody(requestBody);
@@ -62,7 +62,7 @@ namespace ChefGpt.Infrastructure.Functions
             {
                 Recipe = recipe.Response,
                 SessionId = recipe.SessionId,
-                //ImageUri = "TO DO"
+                ImageUri = recipe.ImageUri
             });
             await response.WriteStringAsync(responseBody);
 

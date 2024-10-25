@@ -1,6 +1,7 @@
-﻿namespace ChefGpt.Infrastructure.RecipePrompting
+﻿using ChefGpt.Infrastructure.RecipePrompting.DTOs;
+
+namespace ChefGpt.Infrastructure.SessionStorage
 {
-    using ChefGpt.Infrastructure.RecipePrompting.DTOs;
 
     public interface ISessionStorage
     {

@@ -1,15 +1,15 @@
-﻿namespace ChefGpt.Infrastructure.RecipePrompting
-{
-    using ChefGpt.Application.Configuration;
-    using ChefGpt.Infrastructure.RecipePrompting.DTOs;
-    using Microsoft.Extensions.Configuration;
+﻿using ChefGpt.Application.Configuration;
+using ChefGpt.Infrastructure.RecipePrompting.DTOs;
+using Microsoft.Extensions.Configuration;
 
-    public class SessionStorage : ISessionStorage
+namespace ChefGpt.Infrastructure.SessionStorage
+{
+    public class InMemorySessionStorage : ISessionStorage
     {
         private Dictionary<string, GptRequestDto> history = new Dictionary<string, GptRequestDto>();
         private readonly GptConfiguration gptConfiguration = new GptConfiguration();
 
-        public SessionStorage(IConfiguration configuration)
+        public InMemorySessionStorage(IConfiguration configuration)
         {
             configuration.GetSection(ApplicationConfigurationKeys.GptConfiguration).Bind(this.gptConfiguration);
         }
