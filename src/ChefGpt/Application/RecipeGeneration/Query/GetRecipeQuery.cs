@@ -1,7 +1,7 @@
 ﻿using ChefGpt.Domain.Models;
 using MediatR;
 
-namespace ChefGpt.Application.RecipePrompting.Commands
+namespace ChefGpt.Application.RecipeGeneration.Commands
 {
     public class GetRecipeQuery : IRequest<RecipeResponse>
     {

@@ -6,11 +6,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ChefGpt.Application.Configuration;
 using ChefGpt.Infrastructure.Configuration;
-using ChefGpt.Application.RecipePrompting.Commands;
-using ChefGpt.Application.RecipePrompting;
+using ChefGpt.Application.RecipeGeneration.Commands;
 using ChefGpt.Infrastructure.RecipePrompting;
 using ChefGpt.Infrastructure.Authentication.Handlers;
 using ChefGpt.Infrastructure.SessionStorage;
+using ChefGpt.Application.RecipeGeneration.Services;
+using System.Configuration;
+using OpenAI;
+using ChefGpt.Infrastructure.ImageGeneration;
+using System.ClientModel;
 
 namespace ChefGpt.Infrastructure
 {
@@ -68,11 +72,24 @@ namespace ChefGpt.Infrastructure
             services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(GetRecipeQuery).Assembly));
 
             services.AddSingleton(configurationRefresher);
+            services.AddSingleton(BuildOpenAiClient(aiStudioConfiguration));
             services.AddSingleton<ISessionStorage, InMemorySessionStorage>();
             services.AddSingleton<IGptService, GptService>();
+            services.AddSingleton<IImageGenerationService, DallEService>();
             services.AddHttpClient<IGptService, GptService>()
                     .AddHttpMessageHandler(_ => GetApiKeyAuthenticationHandler(aiStudioConfiguration));
         }
+
+        private static OpenAIClient BuildOpenAiClient(AzureAiStudioConfiguration configuration)
+        {
+            var credential = new ApiKeyCredential(configuration.ApiKey);
+            var options = new OpenAIClientOptions
+            {
+                Endpoint = configuration.DallEEndpoint
+            };
+            return new OpenAIClient(credential, options);
+        }
+
 
         private static DefaultAzureCredential GetManagedIdentity()
         {

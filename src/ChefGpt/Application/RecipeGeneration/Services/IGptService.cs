@@ -1,7 +1,7 @@
-﻿using ChefGpt.Application.RecipePrompting.Commands;
+﻿using ChefGpt.Application.RecipeGeneration.Commands;
 using ChefGpt.Domain.Models;
 
-namespace ChefGpt.Application.RecipePrompting
+namespace ChefGpt.Application.RecipeGeneration.Services
 {
     public interface IGptService
     {

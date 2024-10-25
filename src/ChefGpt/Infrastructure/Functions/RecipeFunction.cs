@@ -1,5 +1,5 @@
 using ChefGpt.Application.DTOs;
-using ChefGpt.Application.RecipePrompting.Commands;
+using ChefGpt.Application.RecipeGeneration.Commands;
 using ChefGpt.Domain.Models;
 using MediatR;
 

@@ -1,6 +1,6 @@
 ﻿using ChefGpt.Application.Configuration;
-using ChefGpt.Application.RecipePrompting;
-using ChefGpt.Application.RecipePrompting.Commands;
+using ChefGpt.Application.RecipeGeneration.Services;
+using ChefGpt.Application.RecipeGeneration.Commands;
 using ChefGpt.Domain.Models;
 using ChefGpt.Infrastructure.Configuration;
 using ChefGpt.Infrastructure.RecipePrompting.DTOs;
@@ -20,7 +20,6 @@ namespace ChefGpt.Infrastructure.RecipePrompting
         private readonly HttpClient client;
 
         private readonly ILogger logger;
-
 
         private readonly AzureAiStudioConfiguration aiStudioConfiguration = new AzureAiStudioConfiguration();
 
