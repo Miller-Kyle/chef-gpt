@@ -119,18 +119,42 @@ The model's instructions are stored in [gpt-instructions-safety](./model-instruc
 
 ``` mermaid
 sequenceDiagram
-    autonumber
-    actor User
-    participant RecipeFunction
-    participant GptService
-    participant DalleService
-    
-    User->>RecipeFunction: POST: Recipe prompt
-    RecipeFunction->>GptService: POST: System context and recipe prompt
-    GptService->>RecipeFunction: Recipe chat
-    RecipeFunction->>DalleService: POST: Generate image
-    DalleService->>GptService: Image
-    RecipeFunction->>User: Recipe and image
+    participant User as User
+    participant FunctionApp as RecipeFunction (Azure Function)
+    participant Handler as GetRecipeQueryHandler
+    participant GptService as IGptService
+    participant ImageService as IImageGenerationService
+    participant SessionStorage as ISessionStorage
+    participant HttpClient as HttpClient
+    participant GPT4OMini as GPT-4o Mini (Azure AI)
+    participant DALL_E as DALL-E (Azure AI)
+
+    User->>FunctionApp: HTTP POST /Prompt (optional session ID)
+    FunctionApp->>FunctionApp: Parse Request Body
+    alt Invalid Request
+        FunctionApp->>User: 400 Bad Request
+    else Valid Request
+        FunctionApp->>Handler: Handle GetRecipeQuery
+        Handler->>GptService: Send recipe prompt
+        GptService->>SessionStorage: Save User Message with Session ID
+        SessionStorage-->>GptService: Chat History
+        GptService->>HttpClient: HTTP POST Request with System Prompt and Optional Chat History to Azure AI Service
+        HttpClient->>GPT4OMini: Send Prompt
+        GPT4OMini-->>HttpClient: GPT Response
+        HttpClient-->>GptService: GPT Response
+        GptService->>SessionStorage: Save GPT Response with Session ID
+        GptService-->>Handler: Recipe Instructions
+        alt Final Recipe Generated
+            Handler->>ImageService: Generate Image
+            ImageService->>DALL_E: Request Image Generation
+            DALL_E-->>ImageService: Image URL
+            ImageService-->>Handler: Image URL
+            Handler->>FunctionApp: RecipeResponse with Image URL
+        else Partial Recipe Generated
+            Handler->>FunctionApp: RecipeResponse without Image
+        end
+        FunctionApp->>User: 200 OK with Recipe Response (includes Session ID)
+    end
 ```
 
 ## Contributing
