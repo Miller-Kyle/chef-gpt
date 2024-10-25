@@ -40,13 +40,14 @@ azd auth login  # Optional: --use-device-code
 
 2. Configure the environment variables
 
-    | Variable              | Purpose                                                                 |
-    |-----------------------|-------------------------------------------------------------------------|
-    | AZURE_SUBSCRIPTION_ID | The Azure Subscription to deploy to                                     |
-    | AZURE_LOCATION        | The Azure Region                                                        |
-    | GPT_ENDPOINT          | The endpoint for the GPT model used for recipe generation               |
-    | DALLE_ENDPOINT        | The endpoint for the DALL-E model used for image generation             |
-    | AZURE_AI_API_KEY      | The Azure AI API key                                                    |
+| Variable              | Purpose                                                                 | Example                                                                                                                         |
+|-----------------------|-------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| AZURE_SUBSCRIPTION_ID | The Azure Subscription to deploy to                                     | 29a3884f-d905-4009-8e3f-d41dcfac5e1f                                                                                            |
+| AZURE_LOCATION        | The Azure Region                                                        | eastus                                                                                                                          |
+| GPT_ENDPOINT          | The endpoint for the GPT model used for recipe generation               | https://<azure-ai-service-name>.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-08-01-preview |
+| DALLE_ENDPOINT        | The endpoint for the DALL-E model used for image generation             | https://<azure-ai-service-name>.openai.azure.com/                                                                               |
+| AZURE_AI_API_KEY      | The Azure AI API key                                                    |                                                                                                                                 |
+
 
     ```bash
     azd env set AZURE_SUBSCRIPTION_ID <Azure subscription id>

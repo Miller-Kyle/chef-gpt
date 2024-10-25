@@ -11,10 +11,9 @@ using ChefGpt.Infrastructure.RecipePrompting;
 using ChefGpt.Infrastructure.Authentication.Handlers;
 using ChefGpt.Infrastructure.SessionStorage;
 using ChefGpt.Application.RecipeGeneration.Services;
-using System.Configuration;
-using OpenAI;
 using ChefGpt.Infrastructure.ImageGeneration;
-using System.ClientModel;
+using Azure;
+using Azure.AI.OpenAI;
 
 namespace ChefGpt.Infrastructure
 {
@@ -82,12 +81,7 @@ namespace ChefGpt.Infrastructure
 
         private static OpenAIClient BuildOpenAiClient(AzureAiStudioConfiguration configuration)
         {
-            var credential = new ApiKeyCredential(configuration.ApiKey);
-            var options = new OpenAIClientOptions
-            {
-                Endpoint = configuration.DallEEndpoint
-            };
-            return new OpenAIClient(credential, options);
+            return new OpenAIClient(configuration.DallEEndpoint, new AzureKeyCredential(configuration.ApiKey));
         }
 
 

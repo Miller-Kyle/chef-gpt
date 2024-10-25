@@ -7,5 +7,7 @@
         public Uri GptEndpoint { get; set; }
 
         public Uri DallEEndpoint { get; set; }
+
+        public string DallEModel { get; set; }
     }
 }
