@@ -81,6 +81,12 @@ var settings = [
     contentType: 'text/plain'
     label: label
   }
+  {
+    name: 'ChefGpt:GptConfiguration:RecipeCompleteRegex' // When the recipe matches the regex it is considered complete.
+    value: 'Here is your .+ recipe' 
+    contentType: 'text/plain'
+    label: label
+  }
   // Key Vault Secret Reference
   {
     name: 'ChefGpt:AzureAiStudioConfiguration:ApiKey'

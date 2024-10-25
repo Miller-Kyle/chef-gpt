@@ -3,12 +3,14 @@
 
 using System.Text.RegularExpressions;
 
+using ChefGpt.Application.Configuration;
 using ChefGpt.Application.RecipeGeneration.Query;
 using ChefGpt.Application.RecipeGeneration.Services;
 using ChefGpt.Domain.Models;
 
 using MediatR;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace ChefGpt.Application.RecipeGeneration.QueryHandlers
@@ -18,6 +20,8 @@ namespace ChefGpt.Application.RecipeGeneration.QueryHandlers
     /// </summary>
     public class GetRecipeQueryHandler : IRequestHandler<GetRecipeQuery, RecipeResponse>
     {
+        private readonly GptConfiguration gptConfiguration = new GptConfiguration();
+
         private readonly IGptService gptService;
 
         private readonly IImageGenerationService imageGenerationService;
@@ -30,11 +34,13 @@ namespace ChefGpt.Application.RecipeGeneration.QueryHandlers
         /// <param name="gptService">The GPT service for generating recipe instructions.</param>
         /// <param name="imageGenerationService">The image generation service for creating recipe images.</param>
         /// <param name="logger">The logger for logging information.</param>
-        public GetRecipeQueryHandler(IGptService gptService, IImageGenerationService imageGenerationService, ILogger<GetRecipeQueryHandler> logger)
+        /// <param name="configuration">The configuration for accessing settings.</param>
+        public GetRecipeQueryHandler(IGptService gptService, IImageGenerationService imageGenerationService, ILogger<GetRecipeQueryHandler> logger, IConfiguration configuration)
         {
             this.gptService = gptService;
             this.imageGenerationService = imageGenerationService;
             this.logger = logger;
+            configuration.GetSection(ApplicationConfigurationKeys.GptConfiguration).Bind(this.gptConfiguration);
         }
 
         /// <summary>
@@ -48,9 +54,13 @@ namespace ChefGpt.Application.RecipeGeneration.QueryHandlers
             this.logger.LogInformation("Handling request: {request}", request.UserPrompt);
             var instructions = await this.gptService.Send(request, cancellationToken);
 
-            var recipe = new RecipeResponse { Response = instructions, SessionId = request.SessionId };
+            var recipe = new RecipeResponse
+                             {
+                                 Response = instructions, 
+                                 SessionId = request.SessionId
+                             };
 
-            if (GeneratedFinalRecipe(instructions))
+            if (this.GeneratedFinalRecipe(instructions))
             {
                 var imageUri = await this.imageGenerationService.GenerateImage(instructions, cancellationToken);
                 recipe.ImageUri = imageUri;
@@ -60,14 +70,13 @@ namespace ChefGpt.Application.RecipeGeneration.QueryHandlers
         }
 
         /// <summary>
-        ///     Determines whether the generated recipe is the final version.
+        ///     Determines whether the generated recipe is the final version by matching against the regex.
         /// </summary>
         /// <param name="recipe">The generated recipe instructions.</param>
         /// <returns><c>true</c> if the recipe is the final version; otherwise, <c>false</c>.</returns>
-        private static bool GeneratedFinalRecipe(string recipe)
+        private bool GeneratedFinalRecipe(string recipe)
         {
-            // Regex format should be read from config as the instructions may change
-            return Regex.IsMatch(recipe, @"Here is your .+ recipe");
+            return Regex.IsMatch(recipe, this.gptConfiguration.RecipeCompleteRegex);
         }
     }
 }

@@ -110,7 +110,7 @@ namespace ChefGpt.Infrastructure
         /// </summary>
         /// <param name="configuration">The Azure AI Studio configuration containing the API key.</param>
         /// <returns>A delegating handler that adds the API key to the request headers.</returns>
-        private static DelegatingHandler GetApiKeyAuthenticationHandler(AzureAiStudioConfiguration configuration)
+        private static ApiKeyAuthenticationHandler GetApiKeyAuthenticationHandler(AzureAiStudioConfiguration configuration)
         {
             return new ApiKeyAuthenticationHandler(configuration.ApiKey);
         }

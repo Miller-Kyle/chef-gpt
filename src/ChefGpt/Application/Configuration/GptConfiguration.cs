@@ -12,5 +12,11 @@ namespace ChefGpt.Application.Configuration
         ///     Gets or sets the system prompt for GPT.
         /// </summary>
         public string SystemPrompt { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the Recipe Complete Regex.
+        ///     When the recipe matches the regex it is considered complete.
+        /// </summary>
+        public string RecipeCompleteRegex { get; set; }
     }
 }

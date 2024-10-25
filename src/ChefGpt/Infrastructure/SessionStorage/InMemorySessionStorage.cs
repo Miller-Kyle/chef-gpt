@@ -41,22 +41,22 @@ namespace ChefGpt.Infrastructure.SessionStorage
         /// <returns>The updated <see cref="GptRequestDto" /> object for the session.</returns>
         public GptRequestDto Add(string sessionId, Message message)
         {
-            if (!this.history.ContainsKey(sessionId))
+            if (!this.history.TryGetValue(sessionId, out var session))
             {
-                this.history[sessionId] = new GptRequestDto
-                                              {
-                                                  Messages = new List<Message>
-                                                                 {
-                                                                     new Message
-                                                                         {
-                                                                             Role = Role.system,
-                                                                             Content = new List<Content> { new Content { Text = this.gptConfiguration.SystemPrompt } }
-                                                                         }
-                                                                 }
-                                              };
+                session = new GptRequestDto
+                              {
+                                  Messages = new List<Message>
+                                                 {
+                                                     new Message
+                                                         {
+                                                             Role = Role.system,
+                                                             Content = new List<Content> { new Content { Text = this.gptConfiguration.SystemPrompt } }
+                                                         }
+                                                 }
+                              };
+                this.history[sessionId] = session;
             }
 
-            var session = this.history[sessionId];
             session.Messages = session.Messages.Append(message);
 
             return session;

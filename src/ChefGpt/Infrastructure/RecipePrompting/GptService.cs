@@ -55,12 +55,12 @@ namespace ChefGpt.Infrastructure.RecipePrompting
         {
             this.logger.LogInformation("Sending GPT Request: {Prompt}", recipeQuery.UserPrompt);
 
-            var userMessage = this.CreateMessage(Role.user, recipeQuery.UserPrompt);
+            var userMessage = CreateMessage(Role.user, recipeQuery.UserPrompt);
             var gptRequest = this.sessionStorage.Add(recipeQuery.SessionId, userMessage);
-            var requestBody = this.SerializeRequestBody(gptRequest);
+            var requestBody = SerializeRequestBody(gptRequest);
 
             var gptResponse = await this.SendGptRequestAsync(requestBody, cancellationToken);
-            var recipeResponse = this.ParseGptResponse(gptResponse);
+            var recipeResponse = ParseGptResponse(gptResponse);
 
             this.SaveResponseToSession(recipeQuery.SessionId, recipeResponse);
 
@@ -75,7 +75,7 @@ namespace ChefGpt.Infrastructure.RecipePrompting
         /// <param name="role">The role of the message sender.</param>
         /// <param name="prompt">The prompt content.</param>
         /// <returns>The created message.</returns>
-        private Message CreateMessage(Role role, string prompt)
+        private static Message CreateMessage(Role role, string prompt)
         {
             return new Message { Role = role, Content = new List<Content> { new Content { Text = prompt } } };
         }
@@ -85,9 +85,20 @@ namespace ChefGpt.Infrastructure.RecipePrompting
         /// </summary>
         /// <param name="responseData">The GPT response data as a string.</param>
         /// <returns>The parsed <see cref="GptResponseDto" /> object.</returns>
-        private GptResponseDto ParseGptResponse(string responseData)
+        private static GptResponseDto ParseGptResponse(string responseData)
         {
             return JsonConvert.DeserializeObject<GptResponseDto>(responseData) ?? throw new InvalidOperationException("Failed to parse GPT response.");
+        }
+
+        /// <summary>
+        ///     Serializes the GPT request object to a JSON string.
+        /// </summary>
+        /// <param name="request">The GPT request object.</param>
+        /// <returns>The serialized JSON string.</returns>
+        private static string SerializeRequestBody(GptRequestDto request)
+        {
+            var serializerSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+            return JsonConvert.SerializeObject(request, serializerSettings);
         }
 
         /// <summary>
@@ -100,7 +111,7 @@ namespace ChefGpt.Infrastructure.RecipePrompting
             var message = gptResponse.Choices.First().Message;
             if (message != null)
             {
-                this.sessionStorage.Add(sessionId, this.CreateMessage(Role.assistant, message.Content));
+                this.sessionStorage.Add(sessionId, CreateMessage(Role.assistant, message.Content));
             }
         }
 
@@ -118,17 +129,6 @@ namespace ChefGpt.Infrastructure.RecipePrompting
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync(cancellationToken);
-        }
-
-        /// <summary>
-        ///     Serializes the GPT request object to a JSON string.
-        /// </summary>
-        /// <param name="request">The GPT request object.</param>
-        /// <returns>The serialized JSON string.</returns>
-        private string SerializeRequestBody(GptRequestDto request)
-        {
-            var serializerSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
-            return JsonConvert.SerializeObject(request, serializerSettings);
         }
     }
 }
