@@ -5,11 +5,11 @@ using Microsoft.Extensions.Logging;
 
 namespace ChefGpt.Infrastructure.Functions
 {
-    public class Health
+    public class HealthFunction
     {
-        private readonly ILogger<Health> logger;
+        private readonly ILogger<HealthFunction> logger;
 
-        public Health(ILogger<Health> logger)
+        public HealthFunction(ILogger<HealthFunction> logger)
         {
             this.logger = logger;
         }
@@ -17,7 +17,7 @@ namespace ChefGpt.Infrastructure.Functions
         [Function("Health")]
         public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
         {
-            this.logger.LogInformation("Health Funciton: Http Triggered");
+            this.logger.LogInformation("Health Function: Http Triggered");
             return new OkObjectResult("OK");
         }
     }

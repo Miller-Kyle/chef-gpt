@@ -2,6 +2,8 @@
 {
     public class RecipeResponse
     {
-        public string Resposne { get; set; }
+        public string Response { get; set; }
+
+        public string SessionId { get; set; }
     }
 }

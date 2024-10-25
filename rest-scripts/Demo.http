@@ -1,0 +1,38 @@
+@ENDPOINT = http://localhost:7122
+
+# -----------------------
+# Health Check
+#
+####
+# @name getHealth
+GET {{ENDPOINT}}/api/Health HTTP/1.1
+Content-Type: application/json
+
+
+# -----------------------
+# Start Recipe
+#
+####
+# @name getRecipe
+POST {{ENDPOINT}}/api/Prompt HTTP/1.1
+Content-Type: application/json
+
+{
+    "Prompt": "I'd like to grill something for dinner with chicken and broccoli. No dietary restrictions and I'd like some brown rice on the side.",
+}
+
+
+
+# -----------------------
+# Adjust Recipe
+#
+####
+# @name updateRecipe
+@sessionId = {{getRecipe.response.body.SessionId}}
+POST {{ENDPOINT}}/api/Prompt HTTP/1.1
+Content-Type: application/json
+
+{
+    "Prompt": "Use beef instead of chicken.",
+    "SessionId": "{{sessionId}}"
+}

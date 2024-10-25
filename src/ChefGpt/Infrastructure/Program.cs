@@ -67,12 +67,10 @@ namespace ChefGpt.Infrastructure
             services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(GetRecipeQuery).Assembly));
 
             services.AddSingleton(configurationRefresher);
-
-            services.AddHttpClient<IGptService, GptService>(client =>
-            {
-                client.BaseAddress = aiStudioConfiguration.GptEndpoint;
-            })
-            .AddHttpMessageHandler(_ => GetApiKeyAuthenticationHandler(aiStudioConfiguration));
+            services.AddSingleton<ISessionStorage, SessionStorage>();
+            services.AddSingleton<IGptService, GptService>();
+            services.AddHttpClient<IGptService, GptService>()
+                    .AddHttpMessageHandler(_ => GetApiKeyAuthenticationHandler(aiStudioConfiguration));
         }
 
         private static DefaultAzureCredential GetManagedIdentity()

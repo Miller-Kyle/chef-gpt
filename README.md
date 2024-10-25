@@ -95,6 +95,10 @@ The following environment variables must be set to run the function locally. The
 
 Start the Infrasturcture project from Visual Studio. Once running, the application can be accessed via an HTTP endpoint provided by the Azure Function. Send a POST request with the desired recipe parameters (e.g., dietary preferences, time constraints) to generate a recipe and receive an AI-generated image of the meal.
 
+#### Demo Rest Scripts
+
+Use the [demo REST script](./rest-scripts/Demo.http) to test the functionality. You'll need to install the [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) Visual Studio Extension.
+
 ## Additional azd commands
 
 The workspace is brought online using the Azure Developer CLI. Additionally, Visual Studio tasks can be used.

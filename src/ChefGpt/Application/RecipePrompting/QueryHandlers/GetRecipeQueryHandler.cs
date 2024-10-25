@@ -20,8 +20,12 @@ namespace ChefGpt.Application.RecipePrompting.CommandHandlers
         public async Task<RecipeResponse> Handle(GetRecipeQuery request, CancellationToken cancellationToken)
         {
             this.logger.LogInformation($"Handling request: {request}", request.UserPrompt);
-            var response = await this.gptService.Send(request.UserPrompt, cancellationToken);
-            return response;
+            var recipe = await this.gptService.Send(request, cancellationToken);
+            return new RecipeResponse()
+            {
+                Response = recipe,
+                SessionId = request.SessionId
+            };
         }
     }
 }
