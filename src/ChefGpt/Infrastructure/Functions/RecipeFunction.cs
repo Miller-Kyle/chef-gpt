@@ -2,27 +2,32 @@
 // Licensed under the MIT License. See the LICENSE file in the project root for full license information.
 
 using System.Net;
+
 using ChefGpt.Application.DTOs;
-using ChefGpt.Application.RecipeGeneration.Commands;
+using ChefGpt.Application.RecipeGeneration.Query;
 using ChefGpt.Domain.Models;
+
 using MediatR;
+
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json;
 
 namespace ChefGpt.Infrastructure.Functions
 {
     /// <summary>
-    /// Azure Function to handle recipe generation requests.
+    ///     Azure Function to handle recipe generation requests.
     /// </summary>
     public class RecipeFunction
     {
         private readonly ILogger<RecipeFunction> logger;
+
         private readonly IMediator mediator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RecipeFunction"/> class.
+        ///     Initializes a new instance of the <see cref="RecipeFunction" /> class.
         /// </summary>
         /// <param name="mediator">The mediator for sending commands and queries.</param>
         /// <param name="logger">The logger for logging information.</param>
@@ -33,7 +38,7 @@ namespace ChefGpt.Infrastructure.Functions
         }
 
         /// <summary>
-        /// Handles HTTP POST requests to generate a recipe based on user input.
+        ///     Handles HTTP POST requests to generate a recipe based on user input.
         /// </summary>
         /// <param name="request">The HTTP request data.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the HTTP response data.</returns>
@@ -54,7 +59,7 @@ namespace ChefGpt.Infrastructure.Functions
         }
 
         /// <summary>
-        /// Creates an error response with the specified error message.
+        ///     Creates an error response with the specified error message.
         /// </summary>
         /// <param name="request">The HTTP request data.</param>
         /// <param name="errorMessage">The error message.</param>
@@ -67,7 +72,7 @@ namespace ChefGpt.Infrastructure.Functions
         }
 
         /// <summary>
-        /// Creates a success response with the specified recipe data.
+        ///     Creates a success response with the specified recipe data.
         /// </summary>
         /// <param name="request">The HTTP request data.</param>
         /// <param name="recipe">The recipe response data.</param>
@@ -84,10 +89,10 @@ namespace ChefGpt.Infrastructure.Functions
         }
 
         /// <summary>
-        /// Parses the request body to extract the recipe request data.
+        ///     Parses the request body to extract the recipe request data.
         /// </summary>
         /// <param name="requestBody">The request body as a string.</param>
-        /// <returns>The parsed <see cref="RecipeRequestDto"/> object, or <c>null</c> if the request body is invalid.</returns>
+        /// <returns>The parsed <see cref="RecipeRequestDto" /> object, or <c>null</c> if the request body is invalid.</returns>
         private static RecipeRequestDto ParseRequestBody(string requestBody)
         {
             if (string.IsNullOrWhiteSpace(requestBody))
@@ -113,10 +118,10 @@ namespace ChefGpt.Infrastructure.Functions
         }
 
         /// <summary>
-        /// Sends a recipe query to the mediator and returns the generated recipe response.
+        ///     Sends a recipe query to the mediator and returns the generated recipe response.
         /// </summary>
         /// <param name="recipeRequest">The recipe request data.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the <see cref="RecipeResponse"/>.</returns>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the <see cref="RecipeResponse" />.</returns>
         private async Task<RecipeResponse> GetRecipeResponseAsync(RecipeRequestDto recipeRequest)
         {
             var query = new GetRecipeQuery { UserPrompt = recipeRequest.Prompt, SessionId = recipeRequest.SessionId };

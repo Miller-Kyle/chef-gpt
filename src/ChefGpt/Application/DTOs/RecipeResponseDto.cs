@@ -4,22 +4,22 @@
 namespace ChefGpt.Application.DTOs
 {
     /// <summary>
-    /// Data Transfer Object for Recipe Response.
+    ///     Data Transfer Object for Recipe Response.
     /// </summary>
     public class RecipeResponseDto
     {
         /// <summary>
-        /// Gets or sets the URI of the image associated with the recipe.
+        ///     Gets or sets the URI of the image associated with the recipe.
         /// </summary>
         public Uri ImageUri { get; set; }
 
         /// <summary>
-        /// Gets or sets the recipe details.
+        ///     Gets or sets the recipe details.
         /// </summary>
         public string Recipe { get; set; }
 
         /// <summary>
-        /// Gets or sets the session ID associated with the recipe request.
+        ///     Gets or sets the session ID associated with the recipe request.
         /// </summary>
         public string SessionId { get; set; }
     }

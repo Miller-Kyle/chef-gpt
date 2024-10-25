@@ -6,7 +6,7 @@ using Azure.AI.OpenAI;
 using Azure.Identity;
 
 using ChefGpt.Application.Configuration;
-using ChefGpt.Application.RecipeGeneration.Commands;
+using ChefGpt.Application.RecipeGeneration.Query;
 using ChefGpt.Application.RecipeGeneration.Services;
 using ChefGpt.Infrastructure.Authentication.Handlers;
 using ChefGpt.Infrastructure.Configuration;
@@ -22,12 +22,12 @@ using Microsoft.Extensions.Hosting;
 namespace ChefGpt.Infrastructure
 {
     /// <summary>
-    /// The main entry point for the ChefGpt application.
+    ///     The main entry point for the ChefGpt application.
     /// </summary>
     public class Program
     {
         /// <summary>
-        /// The main method, which is the entry point of the application.
+        ///     The main method, which is the entry point of the application.
         /// </summary>
         /// <param name="args">The command-line arguments.</param>
         public static void Main(string[] args)
@@ -72,7 +72,7 @@ namespace ChefGpt.Infrastructure
         }
 
         /// <summary>
-        /// Builds the OpenAI client using the specified configuration.
+        ///     Builds the OpenAI client using the specified configuration.
         /// </summary>
         /// <param name="configuration">The Azure AI Studio configuration.</param>
         /// <returns>The configured OpenAI client.</returns>
@@ -82,7 +82,7 @@ namespace ChefGpt.Infrastructure
         }
 
         /// <summary>
-        /// Configures the services for the application.
+        ///     Configures the services for the application.
         /// </summary>
         /// <param name="hostContext">The host builder context.</param>
         /// <param name="services">The service collection to configure.</param>
@@ -106,7 +106,7 @@ namespace ChefGpt.Infrastructure
         }
 
         /// <summary>
-        /// Creates an API key authentication handler.
+        ///     Creates an API key authentication handler.
         /// </summary>
         /// <param name="configuration">The Azure AI Studio configuration containing the API key.</param>
         /// <returns>A delegating handler that adds the API key to the request headers.</returns>
@@ -116,7 +116,7 @@ namespace ChefGpt.Infrastructure
         }
 
         /// <summary>
-        /// Gets the managed identity credential for Azure services.
+        ///     Gets the managed identity credential for Azure services.
         /// </summary>
         /// <returns>The managed identity credential.</returns>
         private static DefaultAzureCredential GetManagedIdentity()

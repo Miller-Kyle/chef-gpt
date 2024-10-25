@@ -2,25 +2,30 @@
 // Licensed under the MIT License. See the LICENSE file in the project root for full license information.
 
 using System.Text.RegularExpressions;
-using ChefGpt.Application.RecipeGeneration.Commands;
+
+using ChefGpt.Application.RecipeGeneration.Query;
 using ChefGpt.Application.RecipeGeneration.Services;
 using ChefGpt.Domain.Models;
+
 using MediatR;
+
 using Microsoft.Extensions.Logging;
 
-namespace ChefGpt.Application.RecipePrompting.CommandHandlers
+namespace ChefGpt.Application.RecipeGeneration.QueryHandlers
 {
     /// <summary>
-    /// Handles the GetRecipeQuery to generate a recipe and optionally an image.
+    ///     Handles the GetRecipeQuery to generate a recipe and optionally an image.
     /// </summary>
     public class GetRecipeQueryHandler : IRequestHandler<GetRecipeQuery, RecipeResponse>
     {
         private readonly IGptService gptService;
+
         private readonly IImageGenerationService imageGenerationService;
+
         private readonly ILogger<GetRecipeQueryHandler> logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetRecipeQueryHandler"/> class.
+        ///     Initializes a new instance of the <see cref="GetRecipeQueryHandler" /> class.
         /// </summary>
         /// <param name="gptService">The GPT service for generating recipe instructions.</param>
         /// <param name="imageGenerationService">The image generation service for creating recipe images.</param>
@@ -33,7 +38,7 @@ namespace ChefGpt.Application.RecipePrompting.CommandHandlers
         }
 
         /// <summary>
-        /// Handles the GetRecipeQuery request.
+        ///     Handles the GetRecipeQuery request.
         /// </summary>
         /// <param name="request">The recipe query request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
@@ -55,7 +60,7 @@ namespace ChefGpt.Application.RecipePrompting.CommandHandlers
         }
 
         /// <summary>
-        /// Determines whether the generated recipe is the final version.
+        ///     Determines whether the generated recipe is the final version.
         /// </summary>
         /// <param name="recipe">The generated recipe instructions.</param>
         /// <returns><c>true</c> if the recipe is the final version; otherwise, <c>false</c>.</returns>

@@ -4,12 +4,12 @@
 namespace ChefGpt.Application.RecipeGeneration.Services
 {
     /// <summary>
-    /// Interface for image generation service to create images based on recipe instructions.
+    ///     Interface for image generation service to create images based on recipe instructions.
     /// </summary>
     public interface IImageGenerationService
     {
         /// <summary>
-        /// Generates an image based on the provided recipe instructions.
+        ///     Generates an image based on the provided recipe instructions.
         /// </summary>
         /// <param name="recipe">The recipe instructions.</param>
         /// <param name="cancellationToken">The cancellation token.</param>

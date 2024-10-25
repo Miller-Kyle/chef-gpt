@@ -4,22 +4,22 @@
 namespace ChefGpt.Infrastructure.Configuration
 {
     /// <summary>
-    /// Contains keys for accessing various configuration settings in the ChefGpt application.
+    ///     Contains keys for accessing various configuration settings in the ChefGpt application.
     /// </summary>
     internal class InfrastructureConfigurationKeys
     {
         /// <summary>
-        /// Key for accessing Azure AI Studio configuration settings.
+        ///     Key for accessing Azure AI Studio configuration settings.
         /// </summary>
         public const string AzureAiStudioConfiguration = "ChefGpt:AzureAiStudioConfiguration";
 
         /// <summary>
-        /// Key for accessing the general label configuration setting.
+        ///     Key for accessing the general label configuration setting.
         /// </summary>
         public const string Label = "ChefGpt";
 
         /// <summary>
-        /// Key for accessing the sentinel configuration setting.
+        ///     Key for accessing the sentinel configuration setting.
         /// </summary>
         public const string Sentinel = "ChefGpt:Sentinel";
     }

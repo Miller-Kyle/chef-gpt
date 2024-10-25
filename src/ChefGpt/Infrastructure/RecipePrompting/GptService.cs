@@ -2,30 +2,36 @@
 // Licensed under the MIT License. See the LICENSE file in the project root for full license information.
 
 using System.Text;
-using ChefGpt.Application.RecipeGeneration.Commands;
+
+using ChefGpt.Application.RecipeGeneration.Query;
 using ChefGpt.Application.RecipeGeneration.Services;
 using ChefGpt.Infrastructure.Configuration;
 using ChefGpt.Infrastructure.RecipePrompting.DTOs;
 using ChefGpt.Infrastructure.SessionStorage;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace ChefGpt.Infrastructure.RecipePrompting
 {
     /// <summary>
-    /// Service for interacting with GPT to generate recipe instructions.
+    ///     Service for interacting with GPT to generate recipe instructions.
     /// </summary>
     public class GptService : IGptService
     {
         private readonly AzureAiStudioConfiguration aiStudioConfiguration = new AzureAiStudioConfiguration();
+
         private readonly HttpClient client;
+
         private readonly ILogger logger;
+
         private readonly ISessionStorage sessionStorage;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GptService"/> class.
+        ///     Initializes a new instance of the <see cref="GptService" /> class.
         /// </summary>
         /// <param name="sessionStorage">The session storage for storing and retrieving session data.</param>
         /// <param name="client">The HTTP client for sending requests to GPT.</param>
@@ -40,7 +46,7 @@ namespace ChefGpt.Infrastructure.RecipePrompting
         }
 
         /// <summary>
-        /// Sends a recipe query to GPT and returns the generated recipe instructions.
+        ///     Sends a recipe query to GPT and returns the generated recipe instructions.
         /// </summary>
         /// <param name="recipeQuery">The recipe query containing the user prompt and session ID.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
@@ -64,7 +70,7 @@ namespace ChefGpt.Infrastructure.RecipePrompting
         }
 
         /// <summary>
-        /// Creates a message with the specified role and prompt.
+        ///     Creates a message with the specified role and prompt.
         /// </summary>
         /// <param name="role">The role of the message sender.</param>
         /// <param name="prompt">The prompt content.</param>
@@ -75,17 +81,17 @@ namespace ChefGpt.Infrastructure.RecipePrompting
         }
 
         /// <summary>
-        /// Parses the GPT response data into a <see cref="GptResponseDto"/> object.
+        ///     Parses the GPT response data into a <see cref="GptResponseDto" /> object.
         /// </summary>
         /// <param name="responseData">The GPT response data as a string.</param>
-        /// <returns>The parsed <see cref="GptResponseDto"/> object.</returns>
+        /// <returns>The parsed <see cref="GptResponseDto" /> object.</returns>
         private GptResponseDto ParseGptResponse(string responseData)
         {
             return JsonConvert.DeserializeObject<GptResponseDto>(responseData) ?? throw new InvalidOperationException("Failed to parse GPT response.");
         }
 
         /// <summary>
-        /// Saves the GPT response to the session storage.
+        ///     Saves the GPT response to the session storage.
         /// </summary>
         /// <param name="sessionId">The session ID.</param>
         /// <param name="gptResponse">The GPT response data.</param>
@@ -99,7 +105,7 @@ namespace ChefGpt.Infrastructure.RecipePrompting
         }
 
         /// <summary>
-        /// Sends a GPT request asynchronously and returns the response as a string.
+        ///     Sends a GPT request asynchronously and returns the response as a string.
         /// </summary>
         /// <param name="requestBody">The request body as a JSON string.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
@@ -115,7 +121,7 @@ namespace ChefGpt.Infrastructure.RecipePrompting
         }
 
         /// <summary>
-        /// Serializes the GPT request object to a JSON string.
+        ///     Serializes the GPT request object to a JSON string.
         /// </summary>
         /// <param name="request">The GPT request object.</param>
         /// <returns>The serialized JSON string.</returns>

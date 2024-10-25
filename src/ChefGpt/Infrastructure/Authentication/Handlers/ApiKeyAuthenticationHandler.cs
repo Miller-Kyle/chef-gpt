@@ -4,17 +4,17 @@
 namespace ChefGpt.Infrastructure.Authentication.Handlers
 {
     /// <summary>
-    /// A message handler that adds an API key to the request headers for authentication purposes.
+    ///     A message handler that adds an API key to the request headers for authentication purposes.
     /// </summary>
     public class ApiKeyAuthenticationHandler : DelegatingHandler
     {
         /// <summary>
-        /// The API key used for authentication.
+        ///     The API key used for authentication.
         /// </summary>
         private readonly string key;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiKeyAuthenticationHandler"/> class.
+        ///     Initializes a new instance of the <see cref="ApiKeyAuthenticationHandler" /> class.
         /// </summary>
         /// <param name="key">The API key.</param>
         public ApiKeyAuthenticationHandler(string key)
@@ -23,8 +23,8 @@ namespace ChefGpt.Infrastructure.Authentication.Handlers
         }
 
         /// <summary>
-        /// Sends an HTTP request to the inner handler after adding an authorization header
-        /// and a custom operation status ID header to the request.
+        ///     Sends an HTTP request to the inner handler after adding an authorization header
+        ///     and a custom operation status ID header to the request.
         /// </summary>
         /// <param name="request">The HTTP request message to send.</param>
         /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
