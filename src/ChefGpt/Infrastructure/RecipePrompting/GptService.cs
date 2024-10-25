@@ -1,27 +1,29 @@
-﻿using ChefGpt.Application.Configuration;
-using ChefGpt.Application.RecipeGeneration.Services;
+﻿// Copyright (c) 2024 Kyle Miller. All rights reserved.
+// Licensed under the MIT License. See the LICENSE file in the project root for full license information.
+
+using System.Text;
+
 using ChefGpt.Application.RecipeGeneration.Commands;
-using ChefGpt.Domain.Models;
+using ChefGpt.Application.RecipeGeneration.Services;
 using ChefGpt.Infrastructure.Configuration;
 using ChefGpt.Infrastructure.RecipePrompting.DTOs;
 using ChefGpt.Infrastructure.SessionStorage;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using System.Net.Http;
-using System.Text;
 
 namespace ChefGpt.Infrastructure.RecipePrompting
 {
     public class GptService : IGptService
     {
+        private readonly AzureAiStudioConfiguration aiStudioConfiguration = new AzureAiStudioConfiguration();
+
         private readonly HttpClient client;
 
         private readonly ILogger logger;
-
-        private readonly AzureAiStudioConfiguration aiStudioConfiguration = new AzureAiStudioConfiguration();
 
         private readonly ISessionStorage sessionStorage;
 
@@ -35,41 +37,39 @@ namespace ChefGpt.Infrastructure.RecipePrompting
 
         public async Task<string> Send(GetRecipeQuery recipeQuery, CancellationToken cancellationToken)
         {
-            logger.LogInformation("Sending GPT Request: {Prompt}", recipeQuery.UserPrompt);
+            this.logger.LogInformation("Sending GPT Request: {Prompt}", recipeQuery.UserPrompt);
 
-            var userMessage = CreateMessage(Role.user, recipeQuery.UserPrompt);
+            var userMessage = this.CreateMessage(Role.user, recipeQuery.UserPrompt);
             var gptRequest = this.sessionStorage.Add(recipeQuery.SessionId, userMessage);
-            var requestBody = SerializeRequestBody(gptRequest);
+            var requestBody = this.SerializeRequestBody(gptRequest);
 
-            var gptResponse = await SendGptRequestAsync(requestBody, cancellationToken);
-            var recipeResponse = ParseGptResponse(gptResponse);
+            var gptResponse = await this.SendGptRequestAsync(requestBody, cancellationToken);
+            var recipeResponse = this.ParseGptResponse(gptResponse);
 
             this.SaveResponseToSession(recipeQuery.SessionId, recipeResponse);
 
-            logger.LogInformation("Received Response: {Response}", gptResponse);
+            this.logger.LogInformation("Received Response: {Response}", gptResponse);
 
             return recipeResponse.Choices.First().Message.Content;
         }
 
         private Message CreateMessage(Role role, string prompt)
         {
-            return new Message
-            {
-                Role = role,
-                Content = new List<Content>
-                {
-                    new Content { Text = prompt }
-                }
-            };
+            return new Message { Role = role, Content = new List<Content> { new Content { Text = prompt } } };
         }
 
-        private string SerializeRequestBody(GptRequestDto request)
+        private GptResponseDto ParseGptResponse(string responseData)
         {
-            var serializerSettings = new JsonSerializerSettings
+            return JsonConvert.DeserializeObject<GptResponseDto>(responseData) ?? throw new InvalidOperationException("Failed to parse GPT response.");
+        }
+
+        private void SaveResponseToSession(string sessionId, GptResponseDto gptResponse)
+        {
+            var message = gptResponse.Choices.First().Message;
+            if (message != null)
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            return JsonConvert.SerializeObject(request, serializerSettings);
+                this.sessionStorage.Add(sessionId, this.CreateMessage(Role.assistant, message.Content));
+            }
         }
 
         private async Task<string> SendGptRequestAsync(string requestBody, CancellationToken cancellationToken)
@@ -82,19 +82,10 @@ namespace ChefGpt.Infrastructure.RecipePrompting
             return await response.Content.ReadAsStringAsync(cancellationToken);
         }
 
-        private GptResponseDto ParseGptResponse(string responseData)
+        private string SerializeRequestBody(GptRequestDto request)
         {
-            return JsonConvert.DeserializeObject<GptResponseDto>(responseData)
-                   ?? throw new InvalidOperationException("Failed to parse GPT response.");
-        }
-
-        private void SaveResponseToSession(string sessionId, GptResponseDto gptResponse)
-        {
-            var message = gptResponse.Choices.First().Message;
-            if (message != null)
-            {
-                this.sessionStorage.Add(sessionId, this.CreateMessage(Role.assistant, message.Content));
-            }
+            var serializerSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+            return JsonConvert.SerializeObject(request, serializerSettings);
         }
     }
 }

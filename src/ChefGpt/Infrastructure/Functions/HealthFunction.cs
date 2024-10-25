@@ -1,3 +1,6 @@
+// Copyright (c) 2024 Kyle Miller. All rights reserved.
+// Licensed under the MIT License. See the LICENSE file in the project root for full license information.
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;

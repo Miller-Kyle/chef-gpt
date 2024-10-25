@@ -1,9 +1,15 @@
-﻿using ChefGpt.Application.RecipeGeneration.Commands;
+﻿// Copyright (c) 2024 Kyle Miller. All rights reserved.
+// Licensed under the MIT License. See the LICENSE file in the project root for full license information.
+
+using System.Text.RegularExpressions;
+
+using ChefGpt.Application.RecipeGeneration.Commands;
 using ChefGpt.Application.RecipeGeneration.Services;
 using ChefGpt.Domain.Models;
+
 using MediatR;
+
 using Microsoft.Extensions.Logging;
-using System.Text.RegularExpressions;
 
 namespace ChefGpt.Application.RecipePrompting.CommandHandlers
 {
@@ -27,11 +33,7 @@ namespace ChefGpt.Application.RecipePrompting.CommandHandlers
             this.logger.LogInformation("Handling request: {request}", request.UserPrompt);
             var instructions = await this.gptService.Send(request, cancellationToken);
 
-            var recipe = new RecipeResponse()
-            {
-                Response = instructions,
-                SessionId = request.SessionId
-            };
+            var recipe = new RecipeResponse { Response = instructions, SessionId = request.SessionId };
 
             if (GeneratedFinalRecipe(instructions))
             {

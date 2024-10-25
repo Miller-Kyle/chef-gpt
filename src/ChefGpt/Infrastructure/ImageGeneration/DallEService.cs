@@ -1,21 +1,24 @@
-﻿using ChefGpt.Application.RecipeGeneration.Services;
-using ChefGpt.Infrastructure.Configuration;
-using ChefGpt.Infrastructure.RecipePrompting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿// Copyright (c) 2024 Kyle Miller. All rights reserved.
+// Licensed under the MIT License. See the LICENSE file in the project root for full license information.
 
 using Azure.AI.OpenAI;
-using Azure;
+
+using ChefGpt.Application.RecipeGeneration.Services;
+using ChefGpt.Infrastructure.Configuration;
+using ChefGpt.Infrastructure.RecipePrompting;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace ChefGpt.Infrastructure.ImageGeneration
 {
     public class DallEService : IImageGenerationService
     {
+        private readonly AzureAiStudioConfiguration aiStudioConfiguration = new AzureAiStudioConfiguration();
+
         private readonly OpenAIClient client;
 
         private readonly ILogger logger;
-
-        private readonly AzureAiStudioConfiguration aiStudioConfiguration = new AzureAiStudioConfiguration();
 
         public DallEService(OpenAIClient client, ILogger<GptService> logger, IConfiguration configuration)
         {
@@ -26,15 +29,13 @@ namespace ChefGpt.Infrastructure.ImageGeneration
 
         public async Task<Uri> GenerateImage(string recipe, CancellationToken cancellationToken)
         {
-            var imageGenerations = await client.GetImageGenerationsAsync(
-                new ImageGenerationOptions()
-                {
-                    DeploymentName = this.aiStudioConfiguration.DallEModel,
-                    Prompt = recipe,
-                    Size = ImageSize.Size1024x1024,
-                    ImageCount = 1,
-                    
-                });
+            this.logger.LogInformation("Generating Image");
+            var imageGenerations = await this.client.GetImageGenerationsAsync(
+                                       new ImageGenerationOptions
+                                           {
+                                               DeploymentName = this.aiStudioConfiguration.DallEModel, Prompt = recipe, Size = ImageSize.Size1024x1024, ImageCount = 1,
+                                           },
+                                       cancellationToken);
 
             var imageUri = imageGenerations.Value.Data.First().Url;
             return imageUri;

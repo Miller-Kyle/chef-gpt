@@ -1,19 +1,23 @@
+// Copyright (c) 2024 Kyle Miller. All rights reserved.
+// Licensed under the MIT License. See the LICENSE file in the project root for full license information.
+
+using Azure;
+using Azure.AI.OpenAI;
 using Azure.Identity;
+
+using ChefGpt.Application.Configuration;
+using ChefGpt.Application.RecipeGeneration.Commands;
+using ChefGpt.Application.RecipeGeneration.Services;
+using ChefGpt.Infrastructure.Authentication.Handlers;
+using ChefGpt.Infrastructure.Configuration;
+using ChefGpt.Infrastructure.ImageGeneration;
+using ChefGpt.Infrastructure.RecipePrompting;
+using ChefGpt.Infrastructure.SessionStorage;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ChefGpt.Application.Configuration;
-using ChefGpt.Infrastructure.Configuration;
-using ChefGpt.Application.RecipeGeneration.Commands;
-using ChefGpt.Infrastructure.RecipePrompting;
-using ChefGpt.Infrastructure.Authentication.Handlers;
-using ChefGpt.Infrastructure.SessionStorage;
-using ChefGpt.Application.RecipeGeneration.Services;
-using ChefGpt.Infrastructure.ImageGeneration;
-using Azure;
-using Azure.AI.OpenAI;
 
 namespace ChefGpt.Infrastructure
 {
@@ -60,6 +64,11 @@ namespace ChefGpt.Infrastructure
             host.Run();
         }
 
+        private static OpenAIClient BuildOpenAiClient(AzureAiStudioConfiguration configuration)
+        {
+            return new OpenAIClient(configuration.DallEEndpoint, new AzureKeyCredential(configuration.ApiKey));
+        }
+
         private static void ConfigureServices(HostBuilderContext hostContext, IServiceCollection services, IConfigurationRefresher configurationRefresher)
         {
             var gptConfiguration = new GptConfiguration();
@@ -75,27 +84,18 @@ namespace ChefGpt.Infrastructure
             services.AddSingleton<ISessionStorage, InMemorySessionStorage>();
             services.AddSingleton<IGptService, GptService>();
             services.AddSingleton<IImageGenerationService, DallEService>();
-            services.AddHttpClient<IGptService, GptService>()
-                    .AddHttpMessageHandler(_ => GetApiKeyAuthenticationHandler(aiStudioConfiguration));
-        }
-
-        private static OpenAIClient BuildOpenAiClient(AzureAiStudioConfiguration configuration)
-        {
-            return new OpenAIClient(configuration.DallEEndpoint, new AzureKeyCredential(configuration.ApiKey));
-        }
-
-
-        private static DefaultAzureCredential GetManagedIdentity()
-        {
-            return new DefaultAzureCredential(new DefaultAzureCredentialOptions
-            {
-                ManagedIdentityClientId = Environment.GetEnvironmentVariable(EnvironmentVariables.ManagedIdentityClientId)!
-            });
+            services.AddHttpClient<IGptService, GptService>().AddHttpMessageHandler(_ => GetApiKeyAuthenticationHandler(aiStudioConfiguration));
         }
 
         private static DelegatingHandler GetApiKeyAuthenticationHandler(AzureAiStudioConfiguration configuration)
         {
             return new ApiKeyAuthenticationHandler(configuration.ApiKey);
+        }
+
+        private static DefaultAzureCredential GetManagedIdentity()
+        {
+            return new DefaultAzureCredential(
+                new DefaultAzureCredentialOptions { ManagedIdentityClientId = Environment.GetEnvironmentVariable(EnvironmentVariables.ManagedIdentityClientId)! });
         }
     }
 }

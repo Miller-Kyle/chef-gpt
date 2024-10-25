@@ -1,6 +1,12 @@
+// Copyright (c) 2024 Kyle Miller. All rights reserved.
+// Licensed under the MIT License. See the LICENSE file in the project root for full license information.
+
+using System.Net;
+
 using ChefGpt.Application.DTOs;
 using ChefGpt.Application.RecipeGeneration.Commands;
 using ChefGpt.Domain.Models;
+
 using MediatR;
 
 using Microsoft.Azure.Functions.Worker;
@@ -9,14 +15,13 @@ using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
 
-using System.Net;
-
 namespace ChefGpt.Infrastructure.Functions
 {
     public class RecipeFunction
     {
-        private readonly IMediator mediator;
         private readonly ILogger<RecipeFunction> logger;
+
+        private readonly IMediator mediator;
 
         public RecipeFunction(IMediator mediator, ILogger<RecipeFunction> logger)
         {
@@ -36,17 +41,11 @@ namespace ChefGpt.Infrastructure.Functions
                 return await CreateErrorResponse(request, "Invalid request.");
             }
 
-            var recipeResponse = await GetRecipeResponseAsync(recipeRequest);
+            var recipeResponse = await this.GetRecipeResponseAsync(recipeRequest);
             return await CreateSuccessResponse(request, recipeResponse);
         }
 
-        private async Task<RecipeResponse> GetRecipeResponseAsync(RecipeRequestDto recipeRequest)
-        {
-            var query = new GetRecipeQuery { UserPrompt = recipeRequest.Prompt, SessionId = recipeRequest.SessionId };
-            return await mediator.Send(query);
-        }
-
-        private async static Task<HttpResponseData> CreateErrorResponse(HttpRequestData request, string errorMessage)
+        private static async Task<HttpResponseData> CreateErrorResponse(HttpRequestData request, string errorMessage)
         {
             var errorResponse = request.CreateResponse(HttpStatusCode.BadRequest);
             await errorResponse.WriteStringAsync(errorMessage);
@@ -58,12 +57,7 @@ namespace ChefGpt.Infrastructure.Functions
             var response = request.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "application/json; charset=utf-8");
 
-            var responseBody = JsonConvert.SerializeObject(new RecipeResponseDto
-            {
-                Recipe = recipe.Response,
-                SessionId = recipe.SessionId,
-                ImageUri = recipe.ImageUri
-            });
+            var responseBody = JsonConvert.SerializeObject(new RecipeResponseDto { Recipe = recipe.Response, SessionId = recipe.SessionId, ImageUri = recipe.ImageUri });
             await response.WriteStringAsync(responseBody);
 
             return response;
@@ -80,7 +74,7 @@ namespace ChefGpt.Infrastructure.Functions
             {
                 var request = JsonConvert.DeserializeObject<RecipeRequestDto>(requestBody);
 
-                if(string.IsNullOrEmpty(request.SessionId))
+                if (string.IsNullOrEmpty(request.SessionId))
                 {
                     request.SessionId = Guid.NewGuid().ToString();
                 }
@@ -92,6 +86,11 @@ namespace ChefGpt.Infrastructure.Functions
                 return null;
             }
         }
-    }
 
+        private async Task<RecipeResponse> GetRecipeResponseAsync(RecipeRequestDto recipeRequest)
+        {
+            var query = new GetRecipeQuery { UserPrompt = recipeRequest.Prompt, SessionId = recipeRequest.SessionId };
+            return await this.mediator.Send(query);
+        }
+    }
 }
